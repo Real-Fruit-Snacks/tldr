@@ -130,7 +130,9 @@ def slugify(stem):
 
 def load_corpus(zip_path):
     """Read pages/<platform>/*.md from the release zip -> (pages, errors)."""
-    entry_re = re.compile(r'^(?:[^/]+/)?pages/(%s)/([^/]+)\.md$' % '|'.join(PLATFORMS))
+    # tldr-pages.en.zip puts platform dirs at the zip root; a git archive
+    # nests them under pages/. Accept both.
+    entry_re = re.compile(r'^(?:pages/)?(%s)/([^/]+)\.md$' % '|'.join(PLATFORMS))
     pages, errors, seen_paths = [], [], set()
     with zipfile.ZipFile(zip_path) as zf:
         for info in sorted(zf.infolist(), key=lambda i: i.filename):
