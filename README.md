@@ -44,7 +44,7 @@ look, shared theme and pet preferences.
 - **Works from anywhere**: GitHub Pages, GitLab Pages, any static file server, or
   opened directly from disk as files.
 - **A ghost** 👻 — the same companion as the sibling manpages site (ported from
-  [Real-Fruit-Snacks/vault](https://github.com/Real-Fruit-Snacks/vault)). Click the ghost
+  [Real-Fruit-Snacks/obsidian-vault-publisher](https://github.com/Real-Fruit-Snacks/obsidian-vault-publisher)). Click the ghost
   button in the header for settings; pet it to recolor it.
 
 ## Hosting
