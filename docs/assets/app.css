@@ -126,6 +126,9 @@ a:hover { text-decoration: underline; }
 .cmd-desc code, .ex-desc code { background: var(--twb-tag-bg); border: 1px solid var(--twb-tag-border);
   border-radius: var(--twb-radius-s); padding: 0 4px; }
 .example { margin: 22px 0; }
+.ex-see { margin: 0; color: var(--twb-text-muted); }
+.ex-see code { background: var(--twb-tag-bg); border: 1px solid var(--twb-tag-border);
+  border-radius: var(--twb-radius-s); padding: 0 4px; }
 .ex-desc { font-size: 14px; font-weight: 700; color: var(--twb-text-normal); margin: 0 0 8px; }
 .ex-cmd { background: var(--twb-bg-1); border: 1px solid var(--twb-border);
   border-radius: var(--twb-radius-m); padding: 10px 14px; margin: 0;

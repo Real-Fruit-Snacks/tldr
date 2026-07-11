@@ -77,6 +77,19 @@ def test_index_desc_first_line_truncated():
     assert bs.index_desc([]) == ''
 
 
+def test_parse_stub():
+    assert bs.parse_stub('tldr {{[-p|--platform]}} windows msedge') == ('windows', 'msedge')
+    assert bs.parse_stub('tldr -p common microsoft-edge') == ('common', 'microsoft-edge')
+    assert bs.parse_stub('tldr --platform osx caffeinate') == ('osx', 'caffeinate')
+    assert bs.parse_stub('tldr vim') == (None, 'vim')
+    assert bs.parse_stub('tldr cat {{[-p|--platform]}} common') == ('common', 'cat')
+    assert bs.parse_stub('tldr adb connect') == (None, 'adb connect')
+    assert bs.parse_stub('tldr windows net use') == ('windows', 'net use')
+    assert bs.parse_stub('tldr {{command}}') is None, 'variable operand is not a stub'
+    assert bs.parse_stub('ls -la') is None
+    assert bs.parse_stub('tldr --update') is None
+
+
 def test_slugify():
     assert bs.slugify('git-checkout') == 'git-checkout'
     assert bs.slugify('nul') == 'nul_'

@@ -120,6 +120,42 @@ def index_desc(desc_lines):
     return d
 
 
+STUB_PLATFORMS = ('common', 'linux', 'windows', 'osx', 'macos', 'android',
+                  'sunos', 'freebsd', 'netbsd', 'openbsd')
+
+
+def parse_stub(cmd):
+    """Detect upstream alias-stub commands: 'tldr [opts] [platform] name'.
+
+    These pages exist for the tldr CLI client ("run this to see the real
+    page"); on a static site they should become links instead.
+    Returns (platform-or-None, name) or None if the command is not a stub.
+    """
+    toks = cmd.split()
+    if not toks or toks[0] != 'tldr':
+        return None
+    args = []
+    for t in toks[1:]:
+        m = re.fullmatch(r'\{\{(.*)\}\}', t)
+        if m:
+            inner = m.group(1)
+            if inner.startswith('-') or inner.startswith('['):
+                continue  # option placeholder like {{[-p|--platform]}}
+            return None   # variable operand ({{command}}): not a concrete stub
+        if t.startswith('-'):
+            continue
+        args.append(t)
+    if not args:
+        return None
+    if args[0] in STUB_PLATFORMS:
+        if len(args) < 2:
+            return None
+        return (args[0], ' '.join(args[1:]))
+    if args[-1] in STUB_PLATFORMS:  # 'tldr cat -p common' puts the platform last
+        return (args[-1], ' '.join(args[:-1]))
+    return (None, ' '.join(args))  # multi-word names exist, e.g. "adb connect"
+
+
 def slugify(stem):
     """tldr stems are already lowercase-safe; guard NTFS anyway."""
     slug = BAD_CHARS.sub('_', stem)
@@ -209,11 +245,28 @@ def main():
         content = ['<p class="cmd-desc">%s</p>' % '<br>\n'.join(desc_html)]
         toc = []
         for i, (d, c) in enumerate(p['examples'], 1):
+            stub_target = None
+            stub = parse_stub(c)
+            if stub:
+                plat, nm = stub
+                t = (by_key.get((nm.replace(' ', '-').lower(), plat)) if plat
+                     else resolve(nm, p['platform']))
+                if t is not None and t is not p:
+                    stub_target = t
+            if stub_target:
+                body_html = ('<p class="ex-see">see <a href="../%s/%s.html">'
+                             '<code>%s</code></a> <span class="badge p-%s">%s</span></p>'
+                             % (stub_target['platform'], stub_target['slug'],
+                                esc(stub_target['name']),
+                                stub_target['platform'], stub_target['platform']))
+            else:
+                body_html = ('<pre class="ex-cmd"><code>%s</code></pre>'
+                             % render_command(c))
             content.append(
                 '<section class="example" id="ex-%d">\n'
                 '<h2 class="ex-desc">%s</h2>\n'
-                '<pre class="ex-cmd"><code>%s</code></pre>\n</section>'
-                % (i, render_inline(d, target), render_command(c)))
+                '%s\n</section>'
+                % (i, render_inline(d, target), body_html))
             label = plain_text(d)
             if len(label) > 48:
                 label = label[:48].rsplit(' ', 1)[0] + '…'
