@@ -3,8 +3,9 @@
 A lightning-fast [tldr-pages](https://github.com/tldr-pages/tldr) lookup site. The
 entire site — pre-rendered pages for the `common`, `linux`, and `windows` platforms
 (English), search index, fonts, styling — is static files committed to this repo under
-`docs/`. It makes **zero network calls**: no CDNs, no external fonts, no analytics. It
-works on an air-gapped GitHub Enterprise instance and even opened straight from disk.
+`docs/`. It makes **zero network calls**: no CDNs, no external fonts, no analytics.
+Host it anywhere — GitHub Pages, GitLab Pages, any static file server — or just open
+it straight from disk.
 
 Sibling project to the `manpages` offline manual; same
 [terminal-workbench-design-system](https://github.com/Real-Fruit-Snacks/terminal-workbench-design-system)
