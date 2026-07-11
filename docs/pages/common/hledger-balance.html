@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-root="../../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090c0d" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f5f7f4" media="(prefers-color-scheme: light)">
+<meta name="description" content="A flexible, general purpose &quot;summing&quot; report that shows accounts with some kind of numeric data.">
+<title>hledger balance — tldr</title>
+<link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../../favicon.ico" sizes="32x32">
+<link rel="stylesheet" href="../../assets/tokens.css">
+<link rel="stylesheet" href="../../assets/app.css">
+<link rel="stylesheet" href="../../assets/pet.css">
+<script>try{var t=localStorage.getItem('twb-theme');if(t)document.documentElement.setAttribute('data-theme',t);var pm=localStorage.getItem('twb-pet');if(pm!=='cursor')document.documentElement.setAttribute('data-pet',pm==='off'?'off':'float');var ps=parseInt(localStorage.getItem('twb-pet-size'),10);if(ps>=16&&ps<=64)document.documentElement.style.setProperty('--pet-size',ps+'px');var po=parseInt(localStorage.getItem('twb-pet-opacity'),10);if(po>=15&&po<=100)document.documentElement.style.setProperty('--pet-base-opacity',(po/100).toFixed(3));}catch(e){}</script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="../../index.html">tl<span class="brand-accent">;dr</span></a>
+  <div class="search-wrap">
+    <span class="prompt-char">❯</span>
+    <input id="search" type="search" placeholder="search tldr pages  ( / )" autocomplete="off" spellcheck="false">
+    <ul id="results" hidden></ul>
+  </div>
+  <button id="theme-toggle" type="button" title="toggle theme">◐</button>
+  <button id="pet-open" type="button" title="pet settings" aria-haspopup="true" aria-expanded="false"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path class="pet-body" d="M2 16 V7 Q2 1 8 1 Q14 1 14 7 V16 L12 14.4 L10 16 L8 14.4 L6 16 L4 14.4 Z"/><g class="pet-eyes-open"><rect x="5" y="6" width="2" height="3"/><rect x="9" y="6" width="2" height="3"/></g></svg></button>
+</header>
+<div id="pet-panel" hidden>
+  <div class="settings-head"><span>Pet</span><button id="pet-close" class="menu-close" type="button" aria-label="Close pet panel">&times;</button></div>
+  <div class="pet-group-label">Appearance</div>
+  <div id="pet-mode" class="pet-seg" role="group" aria-label="Pet mode"><button data-mode="float">Roam</button><button data-mode="cursor">Cursor</button><button data-mode="off">Off</button></div>
+  <label class="pet-slider"><span>Size</span><input id="pet-size" type="range" min="16" max="64" step="2"></label>
+  <label class="pet-slider"><span>Opacity</span><input id="pet-opacity" type="range" min="15" max="100" step="5"></label>
+  <div id="pet-color" class="pet-swatches" role="group" aria-label="Pet color"><button data-color="0" style="--sw:var(--twb-accent)"></button><button data-color="1" style="--sw:var(--twb-accent-alt)"></button><button data-color="2" style="--sw:var(--twb-warm)"></button><button data-color="3" style="--sw:var(--twb-violet)"></button><button data-color="4" style="--sw:var(--twb-orange)"></button><button data-color="5" style="--sw:var(--twb-red)"></button></div>
+  <div class="pet-group-label">Behavior</div>
+  <button id="pet-q-nap" class="settings-row pet-quirk" type="button"><span class="settings-label">Nap when idle</span><span class="settings-val"></span></button>
+  <button id="pet-q-flee" class="settings-row pet-quirk" type="button"><span class="settings-label">Flee from cursor</span><span class="settings-val"></span></button>
+  <button id="pet-q-read" class="settings-row pet-quirk" type="button"><span class="settings-label">Read along</span><span class="settings-val"></span></button>
+  <button id="pet-q-tricks" class="settings-row pet-quirk" type="button"><span class="settings-label">Do tricks</span><span class="settings-val"></span></button>
+  <button id="pet-q-speech" class="settings-row pet-quirk" type="button"><span class="settings-label">Speech bubbles</span><span class="settings-val"></span></button>
+</div>
+<main class="page">
+  <nav class="toc" aria-label="Examples">
+    <div class="toc-title">hledger balance</div>
+    <ul><li><a href="#ex-1">Show the balance change in all accounts from…</a></li><li><a href="#ex-2">Show the balance change in accounts whose name…</a></li><li><a href="#ex-3">Show expenses each month, and their totals and…</a></li><li><a href="#ex-4">Similar to the above, matching accounts by…</a></li><li><a href="#ex-5">Show end balances (including from postings…</a></li><li><a href="#ex-6">Similar to the above, also show zero balances,…</a></li><li><a href="#ex-7">Show investment assets' market [V]alue in base…</a></li><li><a href="#ex-8">Show unrealised capital gains/losses from…</a></li></ul>
+  </nav>
+  <article class="tldr-content">
+  <header class="cmd-head"><h1 class="cmd-name">hledger balance</h1><span class="badge p-common">common</span></header>
+<p class="cmd-desc">A flexible, general purpose "summing" report that shows accounts with some kind of numeric data.<br>
+This can be balance changes per period, end balances, budget performance, unrealised capital gains, etc.<br>
+More information: <a class="ext" href="https://hledger.org/hledger.html#balance" rel="noopener">https://hledger.org/hledger.html#balance</a></p>
+<section class="example" id="ex-1">
+<h2 class="ex-desc">Show the balance change in all accounts from all postings over all time</h2>
+<pre class="ex-cmd"><code>hledger <var>[bal|balance]</var></code></pre>
+</section>
+<section class="example" id="ex-2">
+<h2 class="ex-desc">Show the balance change in accounts whose name contains <code>expenses</code>, as a tree, summarising the top two levels only</h2>
+<pre class="ex-cmd"><code>hledger <var>[bal|balance]</var> <var>expenses</var> <var>[-t|--tree]</var> <var>[-2|--depth 2]</var></code></pre>
+</section>
+<section class="example" id="ex-3">
+<h2 class="ex-desc">Show expenses each month, and their totals and averages, sorted by total; and their monthly budget goals</h2>
+<pre class="ex-cmd"><code>hledger <var>[bal|balance]</var> <var>expenses</var> <var>[-M|--monthly]</var> <var>[-T|--row-total]</var> <var>[-A|--average]</var> <var>[-S|--sort-amount]</var> --budget</code></pre>
+</section>
+<section class="example" id="ex-4">
+<h2 class="ex-desc">Similar to the above, matching accounts by <code>Expense</code> type, as a two level tree without squashing boring accounts</h2>
+<pre class="ex-cmd"><code>hledger <var>[bal|balance]</var> type:<var>X</var> <var>[-MTAS|--monthly --row-total --average --sort-amount]</var> --budget <var>[-t|--tree]</var> <var>[-2|--depth 2]</var> --no-elide</code></pre>
+</section>
+<section class="example" id="ex-5">
+<h2 class="ex-desc">Show end balances (including from postings before the start date), quarterly in 2024, in accounts whose name contains <code>assets</code> or <code>liabilities</code></h2>
+<pre class="ex-cmd"><code>hledger <var>[bal|balance]</var> <var>[-H|--historical]</var> <var>[-p|--period]</var> '<var>quarterly in 2024</var>' <var>assets</var> <var>liabilities</var></code></pre>
+</section>
+<section class="example" id="ex-6">
+<h2 class="ex-desc">Similar to the above, also show zero balances, sort by total and summarise to three levels</h2>
+<pre class="ex-cmd"><code>hledger <var>[bal|balance]</var> <var>[-HQ|--historical --quarterly]</var> date:<var>2024</var> type:<var>AL</var> <var>[-ES|--empty --sort-amount]</var> <var>[-3|--depth 3]</var></code></pre>
+</section>
+<section class="example" id="ex-7">
+<h2 class="ex-desc">Show investment assets' market [V]alue in base currency at the end of each quarter</h2>
+<pre class="ex-cmd"><code>hledger <var>[bal|balance]</var> <var>[-HVQ|--historical --market --quarterly]</var> <var>assets:investments</var></code></pre>
+</section>
+<section class="example" id="ex-8">
+<h2 class="ex-desc">Show unrealised capital gains/losses from market price changes in each quarter, for non-cryptocurrency investment assets</h2>
+<pre class="ex-cmd"><code>hledger <var>[bal|balance]</var> --gain <var>[-Q|--quarterly]</var> <var>assets:investments</var> not:<var>cryptocurrency</var></code></pre>
+</section>
+  <footer class="page-foot">generated 2026-07-10 · tldr-pages v2.3 · fully offline</footer>
+  </article>
+</main>
+<div id="site-pet" aria-hidden="true"><div class="pet-tilt"><div class="pet-sprite" title="pet the ghost to recolor it"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path class="pet-body" d="M2 16 V7 Q2 1 8 1 Q14 1 14 7 V16 L12 14.4 L10 16 L8 14.4 L6 16 L4 14.4 Z"/><g class="pet-eyes-open"><rect x="5" y="6" width="2" height="3"/><rect x="9" y="6" width="2" height="3"/></g><g class="pet-eyes-closed"><rect x="5" y="8" width="2" height="1"/><rect x="9" y="8" width="2" height="1"/></g><g class="pet-eyes-happy"><path d="M4.6 8 L6 6.6 L7.4 8"/><path d="M8.6 8 L10 6.6 L11.4 8"/></g></svg></div></div></div>
+<script src="../../data/index.js" defer></script>
+<script src="../../assets/search-core.js" defer></script>
+<script src="../../assets/app.js" defer></script>
+<script src="../../assets/pet.js" defer></script>
+</body>
+</html>
