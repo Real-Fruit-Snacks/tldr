@@ -1,0 +1,1 @@
+window.TLDRDB={"v":1,"generated":"stub","release":"stub","pages":[["tar","common","Archiving utility.","pages/common/tar.html"],["grep","common","Find patterns in files.","pages/common/grep.html"],["wsl","windows","Manage Windows Subsystem for Linux.","pages/windows/wsl.html"]]};
